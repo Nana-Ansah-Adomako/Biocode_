@@ -42,7 +42,7 @@ The workflow involves the following steps:
 - MA plots to visualize differentially expressed genes.
 - ![MA plot](https://github.com/user-attachments/assets/50f5ccb4-4534-49e4-a17b-79f20553e7c9)
 
-#**Barplots and dotplots for enriched GO terms and KEGG pathways**.
+  **Barplots and dotplots for enriched GO terms and KEGG pathways**.
   
 - Bar plot of enriched terms [BP-Biological Process enrichment]:
 - ![BP enrichment](https://github.com/user-attachments/assets/3a59946b-4860-46e5-a25f-1fc62e627ab1)
@@ -61,10 +61,11 @@ The workflow involves the following steps:
 - Cnetplots to explore the relationship between genes and enriched pathways.
 **NOTE:** Both `barplot()` and `dotplot()` display only the most significant or selected enriched terms, but one may want to see which genes are involved in these terms. To address this complexity where a gene may belong to multiple annotation categories, the `cnetplot()` function was developed to capture and display these complex associations. 
 
-- Tunning in onto 5 highly significantly enriched terms
+- Narrowing down to 5 highly significantly enriched pathway terms
+  
   ![network of terms_1](https://github.com/user-attachments/assets/75a62258-1322-43ef-baeb-be47cf73ba50)
 
-
+  Differentially expressed genes associated with the 5 enriched pathway terms
   ![genes involved in enriched network](https://github.com/user-attachments/assets/24f1b8ea-ad5d-4856-aaad-c77f636c4b2a)
 
   
