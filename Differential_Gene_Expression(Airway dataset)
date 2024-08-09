@@ -147,7 +147,7 @@ edo <- enrichKEGG(signif_genes)
 
 edo_x <- setReadable(edo, 'org.Hs.eg.db', 'ENTREZID')
 p1 <- cnetplot(edo_x, showCategory = 5,
-               categorySize = "geneNum",
+               categorySize = "pvalue",
                node_label = "category",
                color_category='darkred', 
                color_gene='steelblue')
