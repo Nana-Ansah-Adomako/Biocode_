@@ -12,9 +12,9 @@ The workflow involves the following steps:
 
 ## Workflow Details
 
-### 1. Data Import and Preprocessing
+### 1. Data obtain and Preprocessing
 
-- Raw RNA-Seq counts data was downloaded from NCBI
+- Raw RNA-Seq counts data was downloaded from NCBI [https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE52778]
 - Import RNA-seq count data from local disk using the `rio` package.
 - Subset the data to include only relevant columns.
 - Replace row names with gene IDs and remove the gene ID column.
