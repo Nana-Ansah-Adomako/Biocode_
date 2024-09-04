@@ -115,11 +115,19 @@ filtered_genes <- as.data.frame(filtered_genes)
 filtered_genes
 
 
-#===========save filtered_genes as hcc_biomarkers
-write.csv(filtered_genes, "hcc_biomarkers.csv")
+#===========save filtered_genes as DEGs
+write.csv(filtered_genes, "DEGs.csv")
 
 
-#====================GO ANALYSIS
+#========================================PPI Network Analysis
+
+# EntrezIDs in DEGs file was copied and pasted in STRING for PPI network analysis
+# Obtained network was sent to Cytoscape for further analysis with MCODE and CytoHubba
+
+
+#================Potential Biomarkers were further subjected to Enrichment Analysis
+#Import potential biomarkers into R
+#GO ANALYSIS
 biomarkers <- read.csv("D:/Bioinformatics/BIOMARKER DISCOVERY/LIVER CANCER/hcc_biomarkers.csv")
 
 GO_results_BP <- enrichGO(gene = biomarkers$Entrez.id,
@@ -181,10 +189,3 @@ as.data.frame(kegg_enrich)
 
 #Viz
 dotplot(kegg_enrich, showCategory = 20, title = "KEGG Pathway Enriched Terms")
-
-#========================================PPI Network Analysis
-
-# biomarkers$Entrez.id was copied and pasted in STRING for PPI network analysis
-# Obtained network was sent to Cytoscape for further analysis
-
-
