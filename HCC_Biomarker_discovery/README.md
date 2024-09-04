@@ -1,5 +1,5 @@
 
-## Hepatocellular Carcinoma (HCC) Biomarker Discovery via Functional Interaction Network Analysis
+## Data-Driven (In Silico) Biomarker Discovery in Hepatocellular Carcinoma (HCC)
 
 This repository contains scripts for the differential expression analysis and enrichment analysis of genes associated with Hepatocellular Carcinoma (HCC) using publicly available GEO data (GSE62232). The analysis is performed using R, STRING and two Cytoscape apps (MCODE and CytoHubba). The R packages used were `limma`, `clusterProfiler`, and `org.Hs.eg.db`.
 
@@ -28,6 +28,15 @@ You can install these packages using the following commands in R:
 install.packages("BiocManager")
 BiocManager::install(c("GEOquery", "limma", "clusterProfiler", "org.Hs.eg.db"))
 ```
+
+
+
+## Workflow
+
+
+![workflow (2)](https://github.com/user-attachments/assets/6fa3c5ff-b341-40f0-b751-869a006cadc4)
+
+
 
 ## Data Acquisition
 
