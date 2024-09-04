@@ -182,3 +182,9 @@ as.data.frame(kegg_enrich)
 #Viz
 dotplot(kegg_enrich, showCategory = 20, title = "KEGG Pathway Enriched Terms")
 
+#========================================PPI Network Analysis
+
+# biomarkers$Entrez.id was copied and pasted in STRING for PPI network analysis
+# Obtained network was sent to Cytoscape for further analysis
+
+
