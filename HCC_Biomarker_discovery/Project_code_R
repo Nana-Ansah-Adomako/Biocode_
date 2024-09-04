@@ -1,0 +1,184 @@
+# ==========================Load libraries
+library(GEOquery)
+library(limma)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+
+
+# =========================Obtain the GEO data
+geo_data <- getGEO("GSE62232", GSEMatrix = TRUE)
+
+head(geo)
+
+# =========================Extracting the expression set 
+expression_set <- geo_data[[1]]
+
+
+# =========================View the phenoData to understand the grouping
+phenoData <- pData(expression_set)
+head(phenoData)
+
+
+# ===========================Create a design matrix based on the groups
+# First, inspect the actual levels in the 'group' variable
+
+group <- factor(phenoData$`characteristics_ch1.1`)
+levels(group)
+
+# Renaming the levels 
+levels(group) <- make.names(levels(group))
+
+# Creating the design matrix with the renamed levels
+design <- model.matrix(~0 + group)
+colnames(design) <- levels(group)
+
+colnames(design)
+
+# ============================Define contrasts with named levels
+contrast.matrix <- makeContrasts(TumorVsNormal = disease.state..Solid.Tumor - disease.state..Non.tumor.liver, levels=design)
+
+
+# ============================Fit the linear model
+fit <- lmFit(exprs(expression_set), design)
+
+
+# =============================Apply the contrasts and employ eBayes
+fit2 <- contrasts.fit(fit, contrast.matrix)
+fit2 <- eBayes(fit2)
+
+
+#===============================Obtain the top DEGs
+degs <- topTable(fit2, adjust="fdr", number=Inf)
+
+
+# ==============================Filter significant DEGs based on adjusted p-value and log fold change
+significant_degs <- degs[degs$adj.P.Val < 0.05 & abs(degs$logFC) > 1, ]
+
+# View the top DEGs
+head(significant_degs)
+
+# Save the results to a CSV file
+write.csv(significant_degs, "HCC_DEGs.csv")
+
+
+#==============================save upregulated and downregulated genes in separate list
+
+upregulated_genes <- significant_degs[significant_degs$logFC > 1, ]
+downregulated_genes <- significant_degs[significant_degs$logFC < -1, ]
+
+head(upregulated_genes)
+head(downregulated_genes)
+
+write.csv(upregulated_genes, "upregulated.csv")
+write.csv(downregulated_genes, "downregulated.csv")
+
+
+
+# ==========================================Rank DEGs by absolute log fold-change
+
+significant_degs$abs_logFC <- abs(significant_degs$logFC)
+ranked_degs <- significant_degs[order(-significant_degs$abs_logFC), ]
+
+# View the 10 highly ranked genes
+head(ranked_degs, 10)
+
+
+
+
+#==============================================Now let's consider only the  top 200 genes in ranked significant_degs for downstream analysis
+
+top200 <- ranked_degs[1:200,]
+head(top200)
+
+
+
+#==========================Converting probe ids to entrezids suitable for susbequent analysis
+
+probe <- rownames(top200)
+
+ensembl <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+conversion <- getBM(attributes = c("affy_hg_u133_plus_2", "entrezgene_id"),
+                      filters = "affy_hg_u133_plus_2",
+                      values = probe,
+                      mart = ensembl)
+
+#================================since multiple probe ids may refer to just one entrezid, filter unique entrez IDs out
+
+head(conversion, 20)
+nrow(conversion)
+
+filtered_genes <- unique(conversion$entrezgene_id)
+head(filtered_genes)
+
+filtered_genes <- as.data.frame(filtered_genes)
+filtered_genes
+
+
+#===========save filtered_genes as hcc_biomarkers
+write.csv(filtered_genes, "hcc_biomarkers.csv")
+
+
+#====================GO ANALYSIS
+biomarkers <- read.csv("D:/Bioinformatics/BIOMARKER DISCOVERY/LIVER CANCER/hcc_biomarkers.csv")
+
+GO_results_BP <- enrichGO(gene = biomarkers$Entrez.id,
+                          OrgDb = "org.Hs.eg.db", 
+                          keyType = "ENTREZID",
+                          ont = "BP",
+                          pAdjustMethod = "BH",
+                          readable = TRUE)
+
+
+GO_results_CC <- enrichGO(gene = biomarkers$Entrez.id, 
+                          OrgDb = "org.Hs.eg.db", 
+                          keyType = "ENTREZID", 
+                          ont = "CC",
+                          pAdjustMethod = "BH",
+                          readable = TRUE)
+
+
+
+GO_results_MF <- enrichGO(gene = biomarkers$Entrez.id, 
+                          OrgDb = "org.Hs.eg.db", 
+                          keyType = "ENTREZID", 
+                          ont = "MF",
+                          pAdjustMethod = "BH",
+                          readable = TRUE)
+
+
+as.data.frame(GO_results_BP)
+as.data.frame(GO_results_CC)
+as.data.frame(GO_results_MF)
+
+
+barplot(GO_results_BP, showCategory =  10)
+barplot(GO_results_CC, showCategory = 10)
+barplot(GO_results_MF, showCategory = 10)
+
+
+
+#============Taking a closer look at the enriched GO terms, i.e  which genes fall into what enriched term
+
+genes_BP <- as.data.frame(GO_results_BP)
+top_10_categories_BP <- genes_BP[order(genes_BP$p.adjust), ][1:10, ]
+write.csv(top_10_categories_BP, "top_10_categories_BP.csv")
+
+
+genes_CC <- as.data.frame(GO_results_CC)
+top_10_categories_CC <- genes_CC[order(genes_CC$p.adjust), ][1:10, ]
+write.csv(top_10_categories_CC, "top_10_categories_CC.csv")
+
+genes_MF <- as.data.frame(GO_results_MF)
+top_10_categories_MF <- genes_MF[order(genes_MF$p.adjust), ][1:10, ]
+write.csv(top_10_categories_MF, "top_10_categories_MF.csv")
+
+
+#==============================KEGG pathway enrichment
+
+kegg_enrich <- enrichKEGG(gene = biomarkers$Entrez.id, organism = 'hsa')
+as.data.frame(kegg_enrich)
+
+#Viz
+dotplot(kegg_enrich, showCategory = 20, title = "KEGG Pathway Enriched Terms")
+
