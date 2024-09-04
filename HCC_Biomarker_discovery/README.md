@@ -1,22 +1,13 @@
-```markdown
-# Hepatocellular Carcinoma (HCC) Biomarker Discovery and Enrichment Analysis
 
-This repository contains scripts for the differential expression analysis and enrichment analysis of genes associated with Hepatocellular Carcinoma (HCC) using publicly available GEO data (GSE62232). The analysis is performed using R and involves various bioinformatics packages such as `limma`, `clusterProfiler`, and `org.Hs.eg.db`.
+## Hepatocellular Carcinoma (HCC) Biomarker Discovery via Functional Interaction Network Analysis
 
-## Table of Contents
+This repository contains scripts for the differential expression analysis and enrichment analysis of genes associated with Hepatocellular Carcinoma (HCC) using publicly available GEO data (GSE62232). The analysis is performed using R, STRING and two Cytoscape apps (MCODE and CytoHubba). The R packages used were `limma`, `clusterProfiler`, and `org.Hs.eg.db`.
 
-- [Introduction](#introduction)
-- [Requirements](#requirements)
-- [Data Acquisition](#data-acquisition)
-- [Differential Expression Analysis](#differential-expression-analysis)
-- [Gene Ontology (GO) Enrichment](#gene-ontology-go-enrichment)
-- [KEGG Pathway Enrichment](#kegg-pathway-enrichment)
-- [PPI Network Analysis](#ppi-network-analysis)
-- [Files](#files)
 
-## Introduction
 
-Hepatocellular carcinoma (HCC) is a major form of liver cancer with high mortality rates. This analysis aims to identify differentially expressed genes (DEGs) between tumor and normal liver tissues, and to perform enrichment analysis to uncover biological processes, cellular components, molecular functions, and pathways associated with these DEGs.
+### Introduction
+
+Hepatocellular carcinoma (HCC) is a major form of liver cancer with high mortality rates. This analysis aims to identify differentially expressed genes (DEGs) between tumor and normal liver tissues. Highly ranked DEGs were subjected to PPI Network Analysis to obtain subcluster and hub genes as potential biomarkers implicated in HCC.  Enrichment analysis were executed to uncover biological processes, cellular components, molecular functions, and pathways these potential biomarkers were associated with.
 
 ## Requirements
 
@@ -26,6 +17,10 @@ The following R packages are required to run the scripts:
 - `limma`
 - `clusterProfiler`
 - `org.Hs.eg.db`
+
+The following tools are required for Biomarker discovery:
+- `STRING`
+- `Cytoscape (MCODE & CytoHubba)` 
 
 You can install these packages using the following commands in R:
 
@@ -77,15 +72,6 @@ kegg_enrich <- enrichKEGG(gene = biomarkers$Entrez.id, organism = 'hsa')
 
 Protein-protein interaction (PPI) network analysis is carried out using STRING and Cytoscape. DEGs are mapped onto the PPI network to explore potential interactions and key hub proteins.
 
-## Files
-
-- **HCC_DEGs.csv**: List of differentially expressed genes.
-- **upregulated.csv**: Upregulated genes in tumor samples.
-- **downregulated.csv**: Downregulated genes in tumor samples.
-- **hcc_biomarkers.csv**: Filtered list of biomarkers with unique Entrez IDs.
-- **top_10_categories_BP.csv**: Top 10 biological processes enriched in the DEGs.
-- **top_10_categories_CC.csv**: Top 10 cellular components enriched in the DEGs.
-- **top_10_categories_MF.csv**: Top 10 molecular functions enriched in the DEGs.
 
 ## Visualization
 
@@ -99,10 +85,3 @@ dotplot(kegg_enrich, showCategory = 20, title = "KEGG Pathway Enriched Terms")
 ## Author
 
 Nana Ansah Adomako
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-```
-
-This `README.md` file provides an overview of the project, including the purpose, methods, and required files. It is structured to guide users through the analysis steps and offers details on how to replicate the study.
