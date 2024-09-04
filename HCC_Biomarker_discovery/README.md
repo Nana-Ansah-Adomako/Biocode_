@@ -52,9 +52,15 @@ fit2 <- eBayes(fit2)
 significant_degs <- topTable(fit2, adjust="fdr", number=Inf)
 ```
 
+
+## PPI Network Analysis
+
+Protein-protein interaction (PPI) network analysis is carried out using STRING and Cytoscape. DEGs are mapped onto the PPI network to explore potential interactions and key hub proteins.
+
+
 ## Gene Ontology (GO) Enrichment
 
-Gene Ontology enrichment analysis is conducted using the `clusterProfiler` package to identify the biological processes (BP), cellular components (CC), and molecular functions (MF) associated with the DEGs.
+Gene Ontology enrichment analysis is conducted using the `clusterProfiler` package to identify the biological processes (BP), cellular components (CC), and molecular functions (MF) associated with the identified biomarkers.
 
 ```r
 GO_results_BP <- enrichGO(gene = biomarkers$Entrez.id, OrgDb = "org.Hs.eg.db", keyType = "ENTREZID", ont = "BP", pAdjustMethod = "BH", readable = TRUE)
@@ -68,15 +74,11 @@ KEGG pathway enrichment is performed to identify pathways enriched in the DEGs u
 kegg_enrich <- enrichKEGG(gene = biomarkers$Entrez.id, organism = 'hsa')
 ```
 
-## PPI Network Analysis
-
-Protein-protein interaction (PPI) network analysis is carried out using STRING and Cytoscape. DEGs are mapped onto the PPI network to explore potential interactions and key hub proteins.
 
 
 ## Visualization
 
-Bar plots and dot plots are generated to visualize the enriched GO terms and KEGG pathways. The PPI network is visualized using Cytoscape.
-
+The PPI network is visualized using Cytoscape. Bar plots and dot plots are generated to visualize the enriched GO terms and KEGG pathways. 
 ```r
 barplot(GO_results_BP, showCategory = 10)
 dotplot(kegg_enrich, showCategory = 20, title = "KEGG Pathway Enriched Terms")
