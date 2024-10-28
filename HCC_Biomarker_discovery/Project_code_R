@@ -128,7 +128,7 @@ write.csv(filtered_genes, "DEGs.csv")
 #================Potential Biomarkers were further subjected to Enrichment Analysis
 #Import potential biomarkers into R
 #GO ANALYSIS
-biomarkers <- read.csv("D:/Bioinformatics/BIOMARKER DISCOVERY/LIVER CANCER/hcc_biomarkers.csv")
+biomarkers <- read.csv("hcc_biomarkers.csv")
 
 GO_results_BP <- enrichGO(gene = biomarkers$Entrez.id,
                           OrgDb = "org.Hs.eg.db", 
